@@ -11,13 +11,22 @@ class usersDAO:
 
         self.conn = psycopg2.connect(connection_url)
 
-    def registerUser(self, ufirstname, ulastname, uemailaddress, upassword, ubio, ustatus):
+    def registerUser(self, ufirstname, ulastname, uusername, uemailaddress, upassword, ubio, ustatus):
         cursor = self.conn.cursor()
-        query = "insert into users(ufirstname, ulastname, uemailaddress, upassword, ubio, ustatus) values (%s, %s, %s, %s, %s, %s) on conflict do nothing returning uid;"
-        cursor.execute(query, (ufirstname, ulastname, uemailaddress, upassword, ubio, ustatus))
+        query = "insert into users(ufirstname, ulastname, uusername, uemailaddress, upassword, ubio, ustatus) values " \
+                "(%s, %s, %s, %s, %s, %s, %s) on conflict do nothing returning uid;"
+        cursor.execute(query, (ufirstname, ulastname, uusername, uemailaddress, upassword, ubio, ustatus))
+
+        uidfetch = cursor.fetchone()
+        if uidfetch is None:
+            uid = 0
+        else:
+            uid = uidfetch[0]
+        self.conn.commit()
+        return uid
 
     def getAllUsers(self):
-        query = "select * from users as u order by u.uid;"
+        query = "select * from users;"
         cursor = self.conn.cursor()
         cursor.execute(query)
         result = []

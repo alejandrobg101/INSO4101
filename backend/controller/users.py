@@ -6,39 +6,43 @@ class UsersController:
 
     def build_dict(self, row):
         result = {}
-        result['UserFirstName'] = row[0]
-        result['UserLastName'] = row[1]
-        result['UserUsername'] = row[2]
-        result['UserPassword'] = row[3]
-        result['UserBio'] = row[3]
-        result['UserStatus'] = row[4]
+        result['UserID'] = row[0]
+        result['UserFirstName'] = row[1]
+        result['UserLastName'] = row[2]
+        result['UserUsername'] = row[3]
+        result['UserEmailAddress'] = row[4]
+        result['UserPassword'] = row[5]
+        result['UserBio'] = row[6]
+        result['UserStatus'] = row[7]
         return result
 
     def registerUser(self, json):
-        if json and len(json) == 5:
+        if json and len(json) == 7:
             ufirstname = json['ufirstname']
             ulastname = json['ulastname']
-            uemailaddress = json['username'] + '@gmail.com'
+            uusername = json['uusername']
+            uemailaddress = json['uemailaddress']
             upassword = json['upassword']
             ubio = json['ubio']
             ustatus = json['ustatus']
-            if ufirstname and ulastname and uemailaddress and upassword and ubio and ustatus:
+            if ufirstname and ulastname and uusername and uemailaddress and upassword and ubio and ustatus:
                 dao = usersDAO()
-                uid = dao.registerUser(ufirstname, ulastname, uemailaddress, upassword, ubio and ustatus)
-                if (uid == 0):
+                uid = dao.registerUser(ufirstname, ulastname, uusername, uemailaddress, upassword, ubio and ustatus)
+                if uid == 0:
                     return jsonify(
-                        Error="Username already in use. Try adding a number to your username or changing it."), 406
+                        Error="Username already in use. Please try another one"), 406
                 result = {}
                 result["uid"] = uid
                 result["ufirstname"] = ufirstname
                 result["ulastname"] = ulastname
+                result["uusername"] = uusername
                 result["uemailaddress"] = uemailaddress
                 result["upassword"] = upassword
                 result["ubio"] = ubio
                 result["ustatus"] = ustatus
                 return jsonify(Users=result), 201
             else:
-                return jsonify(Error="Malformed post request"), 400
+                return jsonify(Error="Malformed post request"), 500
         else:
             return jsonify(Error="Malformed post request"), 400
 
