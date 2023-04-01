@@ -1,7 +1,6 @@
 from flask import jsonify
 from backend.dao.users import usersDAO
 
-
 class UsersController:
 
     def build_dict(self, row):
@@ -15,36 +14,6 @@ class UsersController:
         result['UserBio'] = row[6]
         result['UserStatus'] = row[7]
         return result
-
-    def registerUser(self, json):
-        if json and len(json) == 7:
-            ufirstname = json['ufirstname']
-            ulastname = json['ulastname']
-            uusername = json['uusername']
-            uemailaddress = json['uemailaddress']
-            upassword = json['upassword']
-            ubio = json['ubio']
-            ustatus = json['ustatus']
-            if ufirstname and ulastname and uusername and uemailaddress and upassword and ubio and ustatus:
-                dao = usersDAO()
-                uid = dao.registerUser(ufirstname, ulastname, uusername, uemailaddress, upassword, ubio and ustatus)
-                if uid == 0:
-                    return jsonify(
-                        Error="Username already in use. Please try another one"), 406
-                result = {}
-                result["uid"] = uid
-                result["ufirstname"] = ufirstname
-                result["ulastname"] = ulastname
-                result["uusername"] = uusername
-                result["uemailaddress"] = uemailaddress
-                result["upassword"] = upassword
-                result["ubio"] = ubio
-                result["ustatus"] = ustatus
-                return jsonify(Users=result), 201
-            else:
-                return jsonify(Error="Malformed post request"), 500
-        else:
-            return jsonify(Error="Malformed post request"), 400
 
     def getAllUsers(self):
         dao = usersDAO()
@@ -76,3 +45,36 @@ class UsersController:
                 return jsonify(Error="Malformed post request"), 400
         else:
             return jsonify(Error="Malformed post request"), 400
+
+    def registerUser(self, json):
+        if json and len(json) == 7:
+            ufirstname = json['ufirstname']
+            ulastname = json['ulastname']
+            uusername = json['uusername']
+            uemailaddress = json['uemailaddress']
+            upassword = json['upassword']
+            ubio = json['ubio']
+            ustatus = json['ustatus']
+            if ufirstname and ulastname and uusername and uemailaddress and upassword and ubio and ustatus:
+                dao = usersDAO()
+                uid = dao.registerUser(ufirstname, ulastname, uusername, uemailaddress, upassword, ubio, ustatus)
+                if uid == 0:
+                    return jsonify(
+                        Error="Username already in use. Please try another one"), 406
+                result = {}
+                result["uid"] = uid
+                result["ufirstname"] = ufirstname
+                result["ulastname"] = ulastname
+                result["uusername"] = uusername
+                result["uemailaddress"] = uemailaddress
+                result["upassword"] = upassword
+                result["ubio"] = ubio
+                result["ustatus"] = ustatus
+                return jsonify(Users=result), 201
+            else:
+                return jsonify(Error="Malformed post request"), 400
+        else:
+            return jsonify(Error="Malformed post request"), 400
+
+
+
