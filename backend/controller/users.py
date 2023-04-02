@@ -15,6 +15,14 @@ class UsersController:
         result['UserStatus'] = row[7]
         return result
 
+    def build_uiddictionary(self, row):
+        result = {}
+        result['UId'] = row[0]
+        result['Admin'] = row[1]
+        return result
+
+
+
     def getAllUsers(self):
         dao = usersDAO()
         result_tuples = dao.getAllUsers()
@@ -75,6 +83,17 @@ class UsersController:
                 return jsonify(Error="Malformed post request"), 400
         else:
             return jsonify(Error="Malformed post request"), 400
+
+    def login(self, json):
+        username = json['Username']
+        password = json['Password']
+        dao = usersDAO()
+        login = dao.loginuser(username, password)
+        if login:
+            dictionary = self.build_uiddictionary(login)
+            return jsonify(dictionary)
+        else:
+            return jsonify("User does not exist")
 
 
 

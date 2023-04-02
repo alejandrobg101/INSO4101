@@ -41,5 +41,13 @@ def getUserInfo():
         return jsonify("Not Supported"), 405
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        return UsersController().login(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+
 if __name__ == '__main__':
     app.run()
