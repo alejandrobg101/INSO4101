@@ -4,6 +4,7 @@ from flask_cors import CORS
 # Activate
 
 from controller.users import UsersController
+from controller.mediaEntries import EntriesController
 
 app = Flask(__name__)
 # Apply CORS to this app
@@ -47,6 +48,43 @@ def login():
         return UsersController().login(request.json)
     else:
         return jsonify("Not Supported"), 405
+
+@app.route('/entries', methods=['GET'])
+
+def get_ALLEntries():
+    if request.method =='GET':
+        return EntriesController().getAllEntries()
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/entries/new', methods=['POST'])
+
+def add_Product():
+        if request.method == 'POST':
+            return EntriesController().addNewEntry(request.json)
+        else:
+            return jsonify("Not Supported"), 405
+
+
+
+
+@app.route('/entries/filter', methods=['POST'])
+def filter_Entries():
+    if request.method == 'POST':
+        return EntriesController().filterEntries(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/entries/<int:mid>',methods=['GET'])
+
+def get_Entry_byId(mid):
+    if request.method=='GET':
+        return EntriesController().getEntryById(mid)
+    else:
+        return jsonify("Not Supported"), 405
+
+
+
 
 
 if __name__ == '__main__':
