@@ -43,8 +43,17 @@ class usersDAO:
             result.append(row)
         return result
 
+    def getUserByUserPassword(self, uusername, upassword):
+        cursor = self.conn.cursor()
+        query = "select uid, uusername, upassword, ustatus from users where uusername = %s and upassword = %s"
+        cursor.execute(query, (uusername, upassword,))
+        getResult = []
+        for row in cursor:
+            getResult.append(row)
+        return getResult
+
     def loginuser(self, uusername, upassword):
-        query = "select uid,ustatus from users where uusername=%s and upassword =%s;"
+        query = "select uid, ustatus from users where uusername=%s and upassword =%s;"
         cursor = self.conn.cursor()
         cursor.execute(query, (uusername, upassword))
         return cursor.fetchone()

@@ -34,6 +34,14 @@ def registerUser():
         return jsonify("Not Supported"), 405
 
 
+@app.route('/getUserByUserPassword', methods=['POST'])
+def get_user_by_user_password_handler():
+    if request.method == "POST":
+        return UsersController().getUserByUserPassword(request.json)
+    else:
+        return jsonify("Not supported"), 405
+
+
 @app.route('/getUserInfo', methods=['POST'])
 def getUserInfo():
     if request.method == 'POST':
@@ -49,23 +57,21 @@ def login():
     else:
         return jsonify("Not Supported"), 405
 
-@app.route('/entries', methods=['GET'])
 
+@app.route('/entries', methods=['GET'])
 def get_ALLEntries():
-    if request.method =='GET':
+    if request.method == 'GET':
         return EntriesController().getAllEntries()
     else:
         return jsonify("Not Supported"), 405
 
+
 @app.route('/entries/new', methods=['POST'])
-
 def add_Product():
-        if request.method == 'POST':
-            return EntriesController().addNewEntry(request.json)
-        else:
-            return jsonify("Not Supported"), 405
-
-
+    if request.method == 'POST':
+        return EntriesController().addNewEntry(request.json)
+    else:
+        return jsonify("Not Supported"), 405
 
 
 @app.route('/entries/filter', methods=['POST'])
@@ -75,16 +81,13 @@ def filter_Entries():
     else:
         return jsonify("Not Supported"), 405
 
-@app.route('/entries/<int:mid>',methods=['GET'])
 
+@app.route('/entries/<int:mid>', methods=['GET'])
 def get_Entry_byId(mid):
-    if request.method=='GET':
+    if request.method == 'GET':
         return EntriesController().getEntryById(mid)
     else:
         return jsonify("Not Supported"), 405
-
-
-
 
 
 if __name__ == '__main__':
