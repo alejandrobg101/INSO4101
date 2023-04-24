@@ -1,42 +1,45 @@
 from flask import jsonify
-from backend.dao.mediaEntries import EntriesDAO
+from backend.dao.mediaEntries import MediaEntriesDAO
 
 
-class EntriesController:
+class MediaEntriesController:
 
     def build_entries_dict(self, row):
         result = {}
         result['MediaID'] = row[0]
         result['MediaName'] = row[1]
-        result['MediaType'] = row[2]
-        result['MediaGenre'] = row[3]
-        result['MediaSynopsis'] = row[4]
+        result['MediaSynopsis'] = row[2]
+        result['MediaCreator'] = row[3]
+        result['MediaCompany'] = row[4]
         result['MediaStatus'] = row[5]
-        result['MediaAccount'] = row[6]
+        result['MediaCount'] = row[6]
         result['MediaRuntime'] = row[7]
         result['MediaRating'] = row[8]
-        result['MediaCreator'] = row[9]
-        result['MediaCompany'] = row[10]
+        result['MediaType'] = row[9]
+        result['MediaGenre'] = row[10]
         return result
 
-    def build_entries_attributes(self, mid, mname, mtype, mgenre, msynopsis, mstatus, mcount, mruntime, mrating,
-                                 mcreator, mcompany):
+    def media_id_dict(self, row):
         result = {}
-        result['MediaID'] = mid
-        result['MediaName'] = mname
-        result['MediaType'] = mtype
-        result['MediaGenre'] = mgenre
-        result['MediaSynopsis'] = msynopsis
-        result['MediaStatus'] = mstatus
-        result['MediaCount'] = mcount
-        result['MediaRuntime'] = mruntime
-        result['MediaRating'] = mrating
-        result['MediaCreator'] = mcreator
-        result['MediaCompany'] = mcompany
+        result['MediaName'] = row[0]
+        result['MediaSynopsis'] = row[1]
+        result['MediaCreator'] = row[2]
+        result['MediaCompany'] = row[3]
+        result['MediaStatus'] = row[4]
+        result['MediaCount'] = row[5]
+        result['MediaRuntime'] = row[6]
+        result['MediaRating'] = row[7]
+        result['MediaType'] = row[8]
+        result['MediaGenre'] = row[9]
         return result
 
-    def getAllEntries(self):
-        dao = EntriesDAO()
+    def update_media_entries_status(self, row):
+        result = {}
+        result['MediaStatus'] = row[0]
+        return result
+
+    def getAllMediaEntries(self):
+        dao = MediaEntriesDAO()
         entries_list = dao.getAllEntries()
         result_list = []
         for row in entries_list:
@@ -44,17 +47,97 @@ class EntriesController:
             result_list.append(result)
         return jsonify(result_list)
 
-    def getEntryById(self, mid):
-        dao = EntriesDAO()
-        row = dao.getEntryById(mid)
-        if not row:
-            return jsonify(Error="Entry Not Found"), 404
-        else:
-            entry = self.build_entries_dict(row)
-            return jsonify(entry)
+    def getMediaEntryByID(self, json):
 
+        if json and len(json) == 1:
+            mid = json['MediaID']
+
+            if mid:
+                dao = MediaEntriesDAO()
+                result_tuples = dao.getMediaEntryByID(mid)
+                result = []
+
+                if len(result_tuples) < 1:
+                    return jsonify(Error="No such Media Entry ID found"), 401
+
+                for row in result_tuples:
+                    dict = self.media_id_dict(row)
+                    result.append(dict)
+                return jsonify(result)
+            else:
+                return jsonify(Error="Malformed post request"), 400
+        else:
+            return jsonify(Error="Malformed post request"), 400
+
+    def getMediaEntryByType(self, json):
+
+        if json and len(json) == 1:
+            mtype = json['MediaType']
+
+            if mtype:
+                dao = MediaEntriesDAO()
+                result_tuples = dao.getMediaEntryByType(mtype)
+                result = []
+
+                if len(result_tuples) < 1:
+                    return jsonify(Error="No such Media Type found"), 401
+
+                for row in result_tuples:
+                    dict = self.media_id_dict(row)
+                    result.append(dict)
+                return jsonify(result)
+            else:
+                return jsonify(Error="Malformed post request"), 400
+        else:
+            return jsonify(Error="Malformed post request"), 400
+
+    def getMediaEntryByGenre(self, json):
+
+        if json and len(json) == 1:
+            mgenre = json['MediaGenre']
+
+            if mgenre:
+                dao = MediaEntriesDAO()
+                result_tuples = dao.getMediaEntryByGenre(mgenre)
+                result = []
+
+                if len(result_tuples) < 1:
+                    return jsonify(Error="No such Media Genre found"), 401
+
+                for row in result_tuples:
+                    dict = self.media_id_dict(row)
+                    result.append(dict)
+                return jsonify(result)
+            else:
+                return jsonify(Error="Malformed post request"), 400
+        else:
+            return jsonify(Error="Malformed post request"), 400
+
+    def getMediaEntryByName(self, json):
+
+        if json and len(json) == 1:
+            mname = json['MediaName']
+
+            if mname:
+                dao = MediaEntriesDAO()
+                result_tuples = dao.getMediaEntryByName(mname)
+                result = []
+
+                if len(result_tuples) < 1:
+                    return jsonify(Error="No such Media Genre found"), 401
+
+                for row in result_tuples:
+                    dict = self.media_id_dict(row)
+                    result.append(dict)
+                return jsonify(result)
+            else:
+                return jsonify(Error="Malformed post request"), 400
+        else:
+            return jsonify(Error="Malformed post request"), 400
+
+    # Not yet implemented
     def filterEntries(self, json):
-        dao = EntriesDAO()
+        dao = MediaEntriesDAO()
         mtype = json["Mediatype"]
 
         if dao.checktype(mtype):
@@ -67,37 +150,68 @@ class EntriesController:
         else:
             return jsonify(Error="Type Not Found"), 404
 
-    def addNewEntry(self, json):
-        mname = json['MediaName']
-        mtype = json['MediaType']
-        mgenre = json['MediaGenre']
-        msynopsis = json['MediaSynopsis']
-        mstatus = json['MediaStatus']
-        mcount = json['MediaCount']
-        mruntime = json['MediaRuntime']
-        mrating = json['MediaRating']
-        mcreator = json['MediaCreator']
-        mcompany = json['MediaCompany']
-
-        dao = EntriesDAO()
-        # check for duplicates
-        mid = dao.insertNewEntry(mname, mtype, mgenre, msynopsis, mstatus, mcount, mruntime, mrating, mcreator,
-                                 mcompany)
-        result = self.build_entries_attributes(mid, mname, mtype, mgenre, msynopsis, mstatus, mcount, mruntime, mrating,
-                                               mcreator, mcompany)
-
-        return jsonify(result), 201
-
-    def updateEntryStatus(self, mid, json):
-        dao = EntriesDAO()
-        if not dao.getEntryById(mid):
-            return jsonify(Error="Entry not found."), 404
-
-        else:
-
+    def addMediaEntry(self, json):
+        if json and len(json) == 10:
+            mname = json['MediaName']
+            msynopsis = json['MediaSynopsis']
+            mcreator = json['MediaCreator']
+            mcompany = json['MediaCompany']
             mstatus = json['MediaStatus']
+            mcount = json['MediaCount']
+            mruntime = json['MediaRuntime']
+            mrating = json['MediaRating']
+            mtype = json['MediaType']
+            mgenre = json['MediaGenre']
 
-            dao.update(mid, mstatus)
-            temp = dao.getEntryById(mid)
-            result = self.build_product_dict(temp)
-            return jsonify(result)
+            if mname and msynopsis and mcreator and mcompany and mstatus and mcount and mruntime and mrating and mtype \
+                    and mgenre:
+                dao = MediaEntriesDAO()
+                mid = dao.addMediaEntry(mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype,
+                                        mgenre)
+                if mid == 0:
+                    return jsonify(
+                        Error="This entry already exists in database.")
+                result = {}
+                result['MediaID'] = mid
+                result['MediaName'] = mname
+                result['MediaSynopsis'] = msynopsis
+                result['MediaCreator'] = mcreator
+                result['MediaCompany'] = mcompany
+                result['MediaStatus'] = mstatus
+                result['MediaCount'] = mcount
+                result['MediaRuntime'] = mruntime
+                result['MediaRating'] = mrating
+                result['MediaType'] = mtype
+                result['MediaGenre'] = mgenre
+                return jsonify(MediaEntry=result), 201
+
+            else:
+                return jsonify(Error="Malformed post request"), 400
+        else:
+            return jsonify(Error="Malformed post request"), 400
+
+    # For some reason only return first letter of updated status
+    def updateMediaEntryStatus(self, json):
+        if json and len(json) == 2:
+            mid = json["MediaID"]
+            mstatus = json["MediaStatus"]
+
+            if mstatus and mid:
+                dao = MediaEntriesDAO()
+                result_tuples = dao.updateMediaEntryStatus(mstatus, mid)
+                result = []
+
+            if mid == 0:
+                return jsonify(Error="No such Media Entry found"), 401
+
+            if mstatus == "Watching" or "Plan to Watch" or "Dropped" or "Completed" \
+                    or "Reading" or "Plan to Read" or "Playing" or "Plan to Play":
+
+                for row in result_tuples:
+                    dict = self.update_media_entries_status(row)
+                    result.append(dict)
+                    return jsonify(result)
+            else:
+                return jsonify(Error="Not a possible status"), 401
+        else:
+            return jsonify(Error="Malformed post request"), 401

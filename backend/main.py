@@ -4,7 +4,7 @@ from flask_cors import CORS
 # Activate
 
 from controller.users import UsersController
-from controller.mediaEntries import EntriesController
+from controller.mediaEntries import MediaEntriesController
 
 app = Flask(__name__)
 # Apply CORS to this app
@@ -21,7 +21,7 @@ def greeting():
 @app.route('/getAllUsers', methods=['GET'])
 def get_all_Users_handler():
     if request.method == 'GET':
-        return UsersController().getAllUsers();
+        return UsersController().getAllUsers()
     else:
         return jsonify("Not Supported"), 405
 
@@ -58,18 +58,54 @@ def login():
         return jsonify("Not Supported"), 405
 
 
-@app.route('/entries', methods=['GET'])
-def get_ALLEntries():
+##### Mediaentry Functions #####
+
+@app.route('/getAllMediaEntries', methods=['GET'])
+def get_All_Media_Entries():
     if request.method == 'GET':
-        return EntriesController().getAllEntries()
+        return MediaEntriesController().getAllMediaEntries()
     else:
         return jsonify("Not Supported"), 405
 
-
-@app.route('/entries/new', methods=['POST'])
-def add_Product():
+@app.route('/getMediaEntryByID', methods=['POST'])
+def get_Media_Entry_By_ID():
     if request.method == 'POST':
-        return EntriesController().addNewEntry(request.json)
+        return MediaEntriesController().getMediaEntryByID(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/getMediaEntryByType', methods=['POST'])
+def get_Media_Entry_By_Type():
+    if request.method == 'POST':
+        return MediaEntriesController().getMediaEntryByType(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/getMediaEntryByGenre', methods=['POST'])
+def get_Media_Entry_By_Genre():
+    if request.method == 'POST':
+        return MediaEntriesController().getMediaEntryByGenre(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/getMediaEntryByName', methods=['POST'])
+def get_Media_Entry_By_Name():
+    if request.method == 'POST':
+        return MediaEntriesController().getMediaEntryByName(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/updateMediaEntryStatus', methods=['POST'])
+def update_Media_Entry_Status():
+    if request.method == 'POST':
+        return MediaEntriesController().updateMediaEntryStatus(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/addMediaEntry', methods=['POST'])
+def add_Media_Entry():
+    if request.method == 'POST':
+        return MediaEntriesController().addMediaEntry(request.json)
     else:
         return jsonify("Not Supported"), 405
 
@@ -77,17 +113,10 @@ def add_Product():
 @app.route('/entries/filter', methods=['POST'])
 def filter_Entries():
     if request.method == 'POST':
-        return EntriesController().filterEntries(request.json)
+        return MediaEntriesController().filterEntries(request.json)
     else:
         return jsonify("Not Supported"), 405
 
-
-@app.route('/entries/<int:mid>', methods=['GET'])
-def get_Entry_byId(mid):
-    if request.method == 'GET':
-        return EntriesController().getEntryById(mid)
-    else:
-        return jsonify("Not Supported"), 405
 
 
 if __name__ == '__main__':

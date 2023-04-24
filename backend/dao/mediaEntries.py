@@ -2,7 +2,7 @@ from backend.config.dbconfig import dbconfig
 import psycopg2
 
 
-class EntriesDAO:
+class MediaEntriesDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s host=%s port=%s " \
                          % (dbconfig['dbname'], dbconfig['user'], dbconfig['password'], dbconfig['dbhost'],
@@ -19,12 +19,7 @@ class EntriesDAO:
             result.append(row)
         return result
 
-
-
-
-
-
-    def filterEntries(self,type):
+    def filterEntries(self, type):
         cursor = self.conn.cursor()
         query = "select * from mediaentry where mtype=%s;"
         cursor.execute(query, (type,))
@@ -33,38 +28,72 @@ class EntriesDAO:
             result.append(row)
         return result
 
-
-#check this one
-    def getEntryById(self, mid):
+    # check this one
+    def getMediaEntryByID(self, mid):
         cursor = self.conn.cursor()
-        query = "select mname,mtype,mgenre,msynopsis,mstatus,mcount,mruntime,mrating,mcreator,mcompany from mediaentry where mid=%s;"
+        query = "select mname,msynopsis,mcreator,mcompany,mstatus,mcount,mruntime,mrating,mtype,mgenre from " \
+                "mediaentry where mid=%s; "
         cursor.execute(query, (mid,))
-        result = cursor.fetchone()
-        return result
+        getResult = []
+        for row in cursor:
+            getResult.append(row)
+        return getResult
 
-    def insertNewEntry(self, mname,mtype,mgenre,msynopsis,mstatus,mcount,mruntime,mrating,mcreator,mcompany):
-        query="insert into mediaentry (mname,mtype,mgenre,msynopsis,mstatus,mcount,mruntime,mrating,mcreator,mcompany) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning mid;"
+    def getMediaEntryByType(self, mtype):
         cursor = self.conn.cursor()
-        cursor.execute(query, (mname,mtype,mgenre,msynopsis,mstatus,mcount,mruntime,mrating,mcreator,mcompany,))
-        mid=cursor.fetchone()[0]
+        query = "select mname,msynopsis,mcreator,mcompany,mstatus,mcount,mruntime,mrating,mtype,mgenre from " \
+                "mediaentry where mtype=%s; "
+        cursor.execute(query, (mtype,))
+        getResult = []
+        for row in cursor:
+            getResult.append(row)
+        return getResult
+
+    def getMediaEntryByGenre(self, mgenre):
+        cursor = self.conn.cursor()
+        query = "select mname,msynopsis,mcreator,mcompany,mstatus,mcount,mruntime,mrating,mtype,mgenre from " \
+                "mediaentry where mgenre=%s; "
+        cursor.execute(query, (mgenre,))
+        getResult = []
+        for row in cursor:
+            getResult.append(row)
+        return getResult
+
+    def getMediaEntryByName(self, mname):
+        cursor = self.conn.cursor()
+        query = "select mname,msynopsis,mcreator,mcompany,mstatus,mcount,mruntime,mrating,mtype,mgenre from " \
+                "mediaentry where mname=%s; "
+        cursor.execute(query, (mname,))
+        getResult = []
+        for row in cursor:
+            getResult.append(row)
+        return getResult
+
+    def addMediaEntry(self, mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype, mgenre):
+        cursor = self.conn.cursor()
+        query = "insert into mediaentry (mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype, mgenre) " \
+                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning mid;"
+        cursor.execute(query, (mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype, mgenre,))
+
+        midfetch = cursor.fetchone()
+        if midfetch is None:
+            mid = 0
+        else:
+            mid = midfetch[0]
         self.conn.commit()
         return mid
-    #checkthisone
-    def update(self,mid,mstatus):
-        query="update mediaentry set mstatus=%s, where mid= %s;"
-        cursor=self.conn.cursor()
-        cursor.execute(query, (mstatus,mid,))
+
+    # checkthisone
+    def updateMediaEntryStatus(self, mstatus, mid):
+        cursor = self.conn.cursor()
+        query = "update mediaentry set mstatus = %s where mid = %s;"
+        cursor.execute(query, (mstatus, mid,))
         self.conn.commit()
-        return mid
+        return mstatus
 
-
-
-    def checktype(self,mtype):
-        query="select exists(select mtype from mediaentry where mtype=%s);"
+    def checktype(self, mtype):
+        query = "select exists(select mtype from mediaentry where mtype=%s);"
         cursor = self.conn.cursor()
         cursor.execute(query, (mtype,))
-        result=cursor.fetchone()[0]
+        result = cursor.fetchone()[0]
         return result
-
-
-
