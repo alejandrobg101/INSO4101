@@ -49,6 +49,16 @@ def getUserInfo():
     else:
         return jsonify("Not Supported"), 405
 
+@app.route('/getUserInfoByID', methods=['GET'])
+def getUserInfoByID(uid):
+    if request.method == 'POST':
+        return UsersController().getUserInfoByID(uid)
+    else:
+        return jsonify("Not Supported"), 405
+@app.route('/updateUser<int:uid>', methods = ['PUT'])
+def updateUser(uid):
+    if request.method == 'PUT':
+        return UsersController().updateUser(uid, request.json)
 
 @app.route('/login', methods=['POST'])
 def login():
