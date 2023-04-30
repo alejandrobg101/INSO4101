@@ -5,7 +5,7 @@ import {
     Container,
     Divider,
     Form,
-    Grid,
+    Grid, GridColumn,
     Header,
     Icon,
     Image, Input,
@@ -15,6 +15,8 @@ import {
 } from "semantic-ui-react";
 
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import MediaEntries from "./MediaEntries";
 
 
 function UserView(){
@@ -75,6 +77,45 @@ function UserView(){
         setIsFriendShown(false);
     }
 
+
+    const [profileInfo, setprofileInfo] = useState("")
+    const [firstName, setfirstName] = useState()
+    const [lastName, setlastName] = useState()
+    const [userName, setuserName] = useState()
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+    const [bio, setBio] = useState()
+    let uid = localStorage.getItem("UserID")
+    console.log("Hello", uid)
+
+    function getUserInfoByID() {
+        axios.get("http://127.0.0.1:5000/getUserInfoByID"+ uid).then((response) => {
+            //const u= JSON.stringify(response.data)
+            const p= JSON.parse(JSON.stringify(response.data))
+
+            setfirstName( p[0].UserFirstName)
+            setlastName(p[0].UserLastName)
+            setuserName(p[0].UserUsername)
+            setEmail(p[0].UserEmailAddress)
+            setPassword(p[0].UserPassword)
+            setBio(p[0].UserBio)
+
+            //user.UserLastName = profileInfo.UserLastName
+            //user.UserUsername = profileInfo.UserUsername
+            //user.email = profileInfo.UserEmailAddress
+            //user.Password = profileInfo.UserPassword
+            //user.UserBio = profileInfo.UserBio
+        }, (error) => {
+            console.log(error)
+        });
+
+    }
+
+
+    // function assignProfileInfo() {
+    // }
+
+
     const [isShown, setIsShown] = useState(false);
     const [isLogoutShown, setIsLogoutShown] = useState(false);
     const [isFriendShown, setIsFriendShown] = useState(false);
@@ -120,6 +161,10 @@ function UserView(){
         // 👇️ or simply set it to true
         setIsFriendShown(false);
     };
+    const handleUpdateProfile = () => {
+        navigation ('/login');
+    };
+
 
     function Box() {
         return (
@@ -145,6 +190,7 @@ function UserView(){
 
                 {isShown && <Form.Button content='Send' primary/>}
             </Form>
+
         );
     }
 
@@ -176,6 +222,63 @@ function UserView(){
                 {isFriendShown && <Form.Button color='green' type='submit' size='tiny'>Add</Form.Button>}
             </Form>
         );
+    }
+
+
+    function ProfileInfoForm(){
+        getUserInfoByID();
+        return(
+            <Form>
+                <Form.Input
+
+                    label='First Name'
+                    placeholder={'EnterFirstName'}
+                    value={firstName}
+
+
+                />
+                <Form.Input
+
+                    label='Last Name'
+                    placeholder='Enter new last name'
+                    value={lastName}
+
+                />
+                <Form.Input
+
+                    label='User Name'
+                    placeholder='Enter new username'
+                    value={userName}
+
+                />
+                <Form.Input
+
+                    label='User Email'
+                    placeholder='Enter new email'
+                    value={email}
+
+                />
+                <Form.Input
+
+                    label='Password'
+                    type='password'
+                    placeholder='Enter new password'
+                    value={password}
+
+                />
+                <Form.Input
+
+                    label='User Bio'
+                    placeholder='Enter new bio'
+                    value={bio}
+
+                />
+                <Divider></Divider>
+
+
+            </Form>
+
+        )
     }
 
     const panes = [
@@ -214,30 +317,9 @@ function UserView(){
             render: () =>
                 <Tab.Pane active={isAuth}>
                     <Container>
-                        <Grid columns={3}>
-                            <Grid.Column>
-                                <Header textAlign={"left"}>
-                                    <Button color='blue' onClick={handleClickShow}>
-                                        Filter
-                                    </Button>
-                                </Header>
-                                {isFriendShown && <Segment>{FriendBox()}</Segment>}
+                        <Grid columns={1}>
 
-                            </Grid.Column>
-                                <Grid.Column textAlign={"center"}>
-                                <Form onSubmit={()=> {
-                                    localStorage.setItem("search", search)
-                                    window.location.reload(false)
-                                }}>
-                                    <Input
-                                        action={{icon:'search'}}
-                                        placeholder='search'
-                                        onChange={(e)=> {
-                                            setSearch(e.target.value)
-                                        }}
-                                    />
-                                </Form>
-                            </Grid.Column>
+
                             <Grid.Column>
                                 <Header textAlign={"right"}>
                                     <Button negative onClick={handleClickLogoutShow}>Sign Out</Button>
@@ -256,6 +338,7 @@ function UserView(){
                         {isShown && <Segment>{Box()}</Segment>}
 
                         <Divider/>
+                        <GridColumn><MediaEntries/></GridColumn>
                     </Container>
                 </Tab.Pane>
         },
@@ -283,8 +366,14 @@ function UserView(){
 
                         {/* 👇️ show component on click */}
                         {isShown && <Segment>{Box()}</Segment>}
-
                         <Divider/>
+                    </Container>
+                    <Container>
+                        <Header size='huge'>YOUR PROFILE </Header>
+                        {ProfileInfoForm()}
+
+
+                        <Button negative onClick={handleUpdateProfile}> Update Profile</Button>
                     </Container>
                 </Tab.Pane>
         },
