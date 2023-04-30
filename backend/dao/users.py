@@ -58,4 +58,22 @@ class usersDAO:
         cursor.execute(query, (uusername, upassword))
         return cursor.fetchone()
 
+# update user
+    def updateUser(self, ufirstname, ulastname, uusername, uemailaddress,upassword,ubio, uid):
+            query = "update users set ufirstname=%s, ulastname=%s, uusername=%s,uemailaddress=%s, upassword=%s, ubio=%s where uid=%s;"
+            cursor = self.conn.cursor()
+            cursor.execute(query, (ufirstname, ulastname, uusername, uemailaddress, upassword,ubio, uid,))
+            rowcount = cursor.rowcount
+            self.conn.commit()
+            return rowcount != 0
+
+# check duplicate user
+    def checkDuplicateUser(self, username, uid):
+        cursor = self.conn.cursor()
+        query = "select uusername  from users where uusername=%s and uid!=%s";
+        cursor.execute(query, (username, uid,))
+        self.conn.commit()
+        result = cursor.fetchone()
+        return result
+
 
