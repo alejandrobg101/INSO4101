@@ -113,8 +113,8 @@ class MediaEntriesDAO:
 
     def getAllEntriesByUser(self, uid):
         cursor = self.conn.cursor()
-        query = "select * from library where uid=%s;"
-        cursor.execute(query, (uid,))
+        query = "with L1 as (select mid from library where uid=%s) select * from L1 natural inner join mediaentry ;"
+        cursor.execute(query, (uid, ))
         result = []
         for row in cursor:
             result.append(row)
