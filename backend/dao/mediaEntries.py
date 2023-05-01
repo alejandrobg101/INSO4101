@@ -73,7 +73,8 @@ class MediaEntriesDAO:
         cursor = self.conn.cursor()
         query = "insert into mediaentry (mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype, mgenre) " \
                 "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning mid;"
-        cursor.execute(query, (mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype, mgenre,))
+        cursor.execute(query,
+                       (mname, msynopsis, mcreator, mcompany, mstatus, mcount, mruntime, mrating, mtype, mgenre,))
 
         midfetch = cursor.fetchone()
         if midfetch is None:
@@ -98,10 +99,10 @@ class MediaEntriesDAO:
         result = cursor.fetchone()[0]
         return result
 
-    #library
-    def addToLibrary(self, mid, uid):
-        cursor=self.conn.cursor()
-        query= "insert into library (mid, uid) values (%s,%s) returning mid"
+    # library
+    def addMediaToLibrary(self, mid, uid):
+        cursor = self.conn.cursor()
+        query = "insert into library (mid, uid) values (%s,%s) returning mid"
         cursor.execute(query, (mid, uid,))
         midfetch = cursor.fetchone()
         if midfetch is None:
@@ -114,7 +115,7 @@ class MediaEntriesDAO:
     def getAllEntriesByUser(self, uid):
         cursor = self.conn.cursor()
         query = "with L1 as (select mid from library where uid=%s) select * from L1 natural inner join mediaentry ;"
-        cursor.execute(query, (uid, ))
+        cursor.execute(query, (uid,))
         result = []
         for row in cursor:
             result.append(row)
@@ -127,6 +128,3 @@ class MediaEntriesDAO:
         self.conn.commit()
         result = cursor.fetchone()
         return result
-
-
-

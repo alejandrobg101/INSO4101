@@ -128,9 +128,9 @@ def filter_Entries():
         return jsonify("Not Supported"), 405
 
 @app.route('/addMediaToLibrary/media-<int:mid>/user-<int:uid>', methods=['PUT'])
-def addMediaToLibrary(uid, mid):
+def addMediaToLibrary(mid, uid):
     if request.method == 'PUT':
-        return MediaEntriesController().addEntryToLibrary(uid, mid)
+        return MediaEntriesController().addMediaToLibrary(mid, uid)
     else:
         return jsonify("Not Supported"), 405
 

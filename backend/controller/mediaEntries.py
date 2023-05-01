@@ -217,7 +217,7 @@ class MediaEntriesController:
         else:
             return jsonify(Error="Malformed post request"), 401
 
-    def getAllMediaEntriesByUser(self,uid):
+    def getAllMediaEntriesByUser(self, uid):
         dao = MediaEntriesDAO()
         entries_list = dao.getAllEntriesByUser(uid)
         result_list = []
@@ -226,7 +226,7 @@ class MediaEntriesController:
             result_list.append(result)
         return jsonify(result_list)
 
-    def addEntryToLibrary(self, mid, uid):
+    def addMediaToLibrary(self, mid, uid):
 
         dao = MediaEntriesDAO()
         dao1 = usersDAO()
@@ -237,6 +237,6 @@ class MediaEntriesController:
         elif checkentry:
             return jsonify(Error="Product Already in Library"), 409
         else:
-            dao.addToLibrary(mid, uid)
+            dao.addMediaToLibrary(mid, uid)
         return jsonify("Entry Added Successfully", mid)
 

@@ -8,7 +8,7 @@ import {
     Grid, GridColumn,
     Header,
     Icon,
-    Image, Input,
+    Image, Input, Label, List,
     Modal,
     Segment,
     Tab, TextArea
@@ -18,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import MediaEntries from "./MediaEntries";
 import LibraryEntries from "./LibraryEntries";
+import Users from "./Users";
 
 
 function UserView(){
@@ -93,7 +94,6 @@ function UserView(){
         axios.get("http://127.0.0.1:5000/getUserInfoByID"+ uid).then((response) => {
             //const u= JSON.stringify(response.data)
             const p= JSON.parse(JSON.stringify(response.data))
-
             setfirstName( p[0].UserFirstName)
             setlastName(p[0].UserLastName)
             setuserName(p[0].UserUsername)
@@ -310,12 +310,16 @@ function UserView(){
                         {isShown && <Segment>{Box()}</Segment>}
 
                         <Divider/>
-                        <GridColumn><MediaEntries/></GridColumn>
+                        <GridColumn>
+                            <Header textAlign={"Left"} size='huge'>MediaList
+                            </Header>
+                            <MediaEntries/>
+                        </GridColumn>
                     </Container>
                 </Tab.Pane>
         },
         {
-            menuItem: 'MediaList',
+            menuItem: 'Library',
             render: () =>
                 <Tab.Pane active={isAuth}>
                     <Container>
@@ -332,7 +336,7 @@ function UserView(){
                                 {isLogoutShown && <LogoutBox />}
                             </Grid.Column>
                         </Grid>
-                        <Header textAlign={"center"} size='huge'>MediaList
+                        <Header textAlign={"center"} size='huge'>Library
                         </Header>
 
 
@@ -340,6 +344,7 @@ function UserView(){
                         {isShown && <Segment>{Box()}</Segment>}
 
                         <Divider/>
+                        <GridColumn></GridColumn>
                     </Container>
                     <GridColumn><LibraryEntries/></GridColumn>
                 </Tab.Pane>
@@ -375,7 +380,6 @@ function UserView(){
                         {ProfileInfoForm()}
 
 
-                        <Button negative onClick={handleUpdateProfile}> Update Profile</Button>
                     </Container>
                 </Tab.Pane>
         },
