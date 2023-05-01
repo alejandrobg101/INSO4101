@@ -1,5 +1,6 @@
 from flask import jsonify
 from backend.dao.mediaEntries import MediaEntriesDAO
+from backend.dao.users import usersDAO
 
 
 class MediaEntriesController:
@@ -215,3 +216,27 @@ class MediaEntriesController:
                 return jsonify(Error="Not a possible status"), 401
         else:
             return jsonify(Error="Malformed post request"), 401
+
+    def getAllMediaEntriesByUser(self,uid):
+        dao = MediaEntriesDAO()
+        entries_list = dao.getAllEntriesByUser(uid)
+        result_list = []
+        for row in entries_list:
+            result = self.build_entries_dict(row)
+            result_list.append(result)
+        return jsonify(result_list)
+
+    def addEntryToLibrary(self, mid, uid):
+
+        dao = MediaEntriesDAO()
+        dao1 = usersDAO()
+        user = dao1.getUserInfo(uid)
+        checkentry = dao.checkDuplicateEntry(mid, uid)
+        if not user:
+            return jsonify(Error="User Not Found"), 404
+        elif checkentry:
+            return jsonify(Error="Product Already in Library"), 409
+        else:
+            dao.addToLibrary(mid, uid)
+        return jsonify("Entry Added Successfully", mid)
+
