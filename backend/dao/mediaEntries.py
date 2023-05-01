@@ -97,3 +97,36 @@ class MediaEntriesDAO:
         cursor.execute(query, (mtype,))
         result = cursor.fetchone()[0]
         return result
+
+    #library
+    def addToLibrary(self, mid, uid):
+        cursor=self.conn.cursor()
+        query= "insert into library (mid, uid) values (%s,%s) returning mid"
+        cursor.execute(query, (mid, uid,))
+        midfetch = cursor.fetchone()
+        if midfetch is None:
+            mid = 0
+        else:
+            mid = midfetch[0]
+        self.conn.commit()
+        return mid
+
+    def getAllEntriesByUser(self, uid):
+        cursor = self.conn.cursor()
+        query = "select * from library where uid=%s;"
+        cursor.execute(query, (uid,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def checkDuplicateEntry(self, mid, uid):
+        cursor = self.conn.cursor()
+        query = "select mid from library where mid=%s and uid=%s;"
+        cursor.execute(query, (mid, uid,))
+        self.conn.commit()
+        result = cursor.fetchone()
+        return result
+
+
+

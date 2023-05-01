@@ -127,6 +127,20 @@ def filter_Entries():
     else:
         return jsonify("Not Supported"), 405
 
+@app.route('/addMediaToLibrary/user-<int:uid>/entry-<int:mid>', methods=['PUT'])
+def addMediaToLibrary(uid, mid):
+    if request.method == 'PUT':
+        return MediaEntriesController().addEntryToLibrary(uid, mid)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route('/getAllEntriesByUser/<int:uid>', methods=['GET'])
+def getAllEntriesByUser(uid):
+    if request.method == 'GET':
+        return MediaEntriesController().getAllMediaEntriesByUser(uid)
+    else:
+        return jsonify("Not Supported"), 405
+
 
 
 if __name__ == '__main__':
