@@ -17,6 +17,7 @@ import {
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import MediaEntries from "./MediaEntries";
+import LibraryEntries from "./LibraryEntries";
 
 
 function UserView(){
@@ -309,6 +310,7 @@ function UserView(){
                         {isShown && <Segment>{Box()}</Segment>}
 
                         <Divider/>
+                        <GridColumn><MediaEntries/></GridColumn>
                     </Container>
                 </Tab.Pane>
         },
@@ -338,8 +340,8 @@ function UserView(){
                         {isShown && <Segment>{Box()}</Segment>}
 
                         <Divider/>
-                        <GridColumn><MediaEntries/></GridColumn>
                     </Container>
+                    <GridColumn><LibraryEntries/></GridColumn>
                 </Tab.Pane>
         },
         {

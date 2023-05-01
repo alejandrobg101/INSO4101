@@ -7,51 +7,52 @@ import axios from "axios";
 import userView from "./UserView";
 import {useNavigate} from "react-router-dom";
 
-function MediaEntries() {
+function LibraryEntries() {
     //const [entries, setentries] = useState([])
     const [entradas, setentradas] = useState([])
     //const [entryCompany, setEntryCompany] = useState()
+    let uid= localStorage.getItem("UserID")
 
     function getEntries() {
 
-            axios.get("http://127.0.0.1:5000/getAllMediaEntries").then((response) => {
+        axios.get("http://127.0.0.1:5000/getAllEntriesByUser/"+ uid).then((response) => {
 
 
-                setentradas(response.data)
+            setentradas(response.data)
 
-                //setentries(JSON.parse(JSON.stringify(response.data)))
-                //setEntryCompany(entries[0].MediaCompany)
-                console.log(entradas)
+            //setentries(JSON.parse(JSON.stringify(response.data)))
+            //setEntryCompany(entries[0].MediaCompany)
+            console.log(entradas)
 
-            }, (error) => {
-                console.log(error)
-            });
+        }, (error) => {
+            console.log(error)
+        });
 
     }
-        // let eid= entradas[0].MediaID
-        // let uid= localStorage.getItem("UserID")
-        // function AddtoLibrary(uid,eid) {
-        //     axios.post("https://onlineshopjys.herokuapp.com/JYS/WishList/add_delete/product-" + productid + "/user-" + uid)
-        //         .then((res) => {
-        //
-        //             if(res.status===200){
-        //                 setwishlist("Product added succesfully")
-        //             }
-        //
-        //         }).catch(error=>{
-        //         setwishlist("")
-        //         if(error.response.status===409) {
-        //             setwishlist("Product already in Wish List")
-        //         }
-        //         else{
-        //
-        //             setwishlist("Product Not Found")
-        //         }
-        //     })
-        // }
+    // let eid= entradas[0].MediaID
+    // let uid= localStorage.getItem("UserID")
+    // function AddtoLibrary(uid,eid) {
+    //     axios.post("https://onlineshopjys.herokuapp.com/JYS/WishList/add_delete/product-" + productid + "/user-" + uid)
+    //         .then((res) => {
+    //
+    //             if(res.status===200){
+    //                 setwishlist("Product added succesfully")
+    //             }
+    //
+    //         }).catch(error=>{
+    //         setwishlist("")
+    //         if(error.response.status===409) {
+    //             setwishlist("Product already in Wish List")
+    //         }
+    //         else{
+    //
+    //             setwishlist("Product Not Found")
+    //         }
+    //     })
+    // }
 
 
-        getEntries()
+    getEntries()
 
 
     return (
@@ -69,6 +70,9 @@ function MediaEntries() {
                             <Label>
                                 Category: {value.MediaGenre}
                             </Label>
+                            <CardDescription>
+
+                            </CardDescription>
                         </Card.Content>
 
                     </Card>
@@ -85,4 +89,4 @@ function MediaEntries() {
 
 }
 
-export default MediaEntries;
+export default LibraryEntries;
