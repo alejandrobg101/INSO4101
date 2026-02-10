@@ -14,8 +14,7 @@ A single application designed to track all types of entertainment media — movi
 6. [Check/Evaluate](#checkevaluate)  
 7. [Act/Standardize](#actstandardize)  
 8. [Features](#features)  
-9. [Usage](#usage)  
-10. [Future Improvements](#future-improvements)  
+9. [Future Improvements](#future-improvements)  
 
 ---
 
@@ -102,3 +101,10 @@ Over the last decade, the scope and quantity of entertainment media has increase
 - Minimal storage requirements for efficient tracking  
 
 ---
+
+## Future Improvements
+
+-Expand media types beyond initial categories.
+-Optimize update frequency and server performance.
+-Integrate cross-genre recommendations for enhanced discovery.
+-Implement user authentication for personalized profiles.
