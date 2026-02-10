@@ -1,8 +1,5 @@
 # 🎬 Universal Entertainment Media Tracker
 
-**Author:** Misael E. Montes Nieves  
-**Date:** 2/2/2023  
-
 A single application designed to track all types of entertainment media — movies, shows, video games, books, comics, and more — in one place, helping users monitor progress, discover new media, and reduce reliance on multiple tracking tools.  
 
 ---
