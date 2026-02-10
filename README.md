@@ -104,7 +104,7 @@ Over the last decade, the scope and quantity of entertainment media has increase
 
 ## Future Improvements
 
--Expand media types beyond initial categories.
--Optimize update frequency and server performance.
--Integrate cross-genre recommendations for enhanced discovery.
--Implement user authentication for personalized profiles.
+- Expand media types beyond initial categories.
+- Optimize update frequency and server performance.
+- Integrate cross-genre recommendations for enhanced discovery.
+- Implement user authentication for personalized profiles.
